@@ -1,21 +1,12 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const Article = require("./Article");
 const User = require("./Users");
 
-const Qreply = sequelize.define("Qreply", {
-  qreply_no: {
+const Auth = sequelize.define("Auth", {
+  auth_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
-  },
-  article_no: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-    references: {
-      model: Article,
-      key: "article_no",
-    },
   },
   user_no: {
     type: DataTypes.BIGINT,
@@ -25,14 +16,14 @@ const Qreply = sequelize.define("Qreply", {
       key: "user_no",
     },
   },
-  qreply_content: {
-    type: DataTypes.STRING(255),
+  auth_refreshtoken: {
+    type: DataTypes.STRING(100),
     allowNull: false,
   },
-  qreply_createdate: {
-    type: DataTypes.DATE,
+  auth_refreshtoken_expiration: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
 
-module.exports = Qreply;
+module.exports = Auth;

@@ -3,19 +3,11 @@ const sequelize = require("../config/Database");
 const Article = require("./Article");
 const User = require("./Users");
 
-const Qreply = sequelize.define("Qreply", {
-  qreply_no: {
+const Apply = sequelize.define("Apply", {
+  apply_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
-  },
-  article_no: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-    references: {
-      model: Article,
-      key: "article_no",
-    },
   },
   user_no: {
     type: DataTypes.BIGINT,
@@ -25,14 +17,18 @@ const Qreply = sequelize.define("Qreply", {
       key: "user_no",
     },
   },
-  qreply_content: {
-    type: DataTypes.STRING(255),
+  article_no: {
+    type: DataTypes.BIGINT,
     allowNull: false,
+    references: {
+      model: Article,
+      key: "article_no",
+    },
   },
-  qreply_createdate: {
-    type: DataTypes.DATE,
+  apply_result: {
+    type: DataTypes.BOOLEAN,
     allowNull: false,
   },
 });
 
-module.exports = Qreply;
+module.exports = Apply;

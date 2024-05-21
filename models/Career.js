@@ -1,21 +1,12 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const Article = require("./Article");
 const User = require("./Users");
 
-const Qreply = sequelize.define("Qreply", {
-  qreply_no: {
+const Career = sequelize.define("Career", {
+  career_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
-  },
-  article_no: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-    references: {
-      model: Article,
-      key: "article_no",
-    },
   },
   user_no: {
     type: DataTypes.BIGINT,
@@ -25,14 +16,18 @@ const Qreply = sequelize.define("Qreply", {
       key: "user_no",
     },
   },
-  qreply_content: {
-    type: DataTypes.STRING(255),
+  career_name: {
+    type: DataTypes.STRING(30),
     allowNull: false,
   },
-  qreply_createdate: {
+  career_startdate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  career_enddate: {
     type: DataTypes.DATE,
     allowNull: false,
   },
 });
 
-module.exports = Qreply;
+module.exports = Career;
