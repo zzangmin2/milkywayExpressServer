@@ -1,11 +1,13 @@
+const jwt = require("jsonwebtoken");
+const JWT_SECRET_KEY = "secretkey";
+
 const tokenAuthMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
 
+  const token = authHeader.split(" ")[1];
   if (!authHeader || !token) {
     return res.status(403).send("비정상 접근입니다.");
   }
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.user = decoded;

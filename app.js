@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
-const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { tokenAuthMiddleware } = require("./middleware/auth");
+const tokenAuthMiddleware = require("./middleware/auth");
+const User = require("./models/Users");
+const Article = require("./models/Article");
+const sequelize = require("./config/Database");
 
 // const sequelize = new Sequelize("test", "root", "Abcd1234!", {
 //   host: "localhost",
@@ -15,46 +17,44 @@ const { tokenAuthMiddleware } = require("./middleware/auth");
 const initDatabase = async () => {
   try {
     await sequelize.authenticate();
-    await User.sync({ force: true });
-    await Article.sync({ force: true });
+
+    // await Article.sync({ force: true });
+    // await User.sync({ force: true });
 
     await User.create({
-      user_no: 1,
-      id: "test1",
-      name: "테스트1",
-      pwd: "1234",
-      email: "test1@test.com",
-      role: "STUDENT",
-      tel: "01022223333",
+      user_id: "test1",
+      user_name: "테스트1",
+      user_pwd: "1234",
+      user_email: "test1@test.com",
+      user_role: "ST",
+      user_tel: "01022223333",
       //   dpt: "com",
     });
     await User.create({
-      user_no: 2,
-      id: "test2",
-      name: "테스트2",
-      pwd: "1234",
-      email: "test2@test.com",
-      role: "STUDENT",
-      tel: "01044445555",
+      user_id: "test2",
+      user_name: "테스트2",
+      user_pwd: "1234",
+      user_email: "test2@test.com",
+      user_role: "ST",
+      user_tel: "01044445555",
       //   dpt: "com",
     });
 
     await Article.create({
-      article_no: 1,
       user_no: 1,
-      articleMemberId: "test1",
+      article_memberId: "test1",
       articleType: "study",
-      title: "[express] 스터디원 모집합니다.",
-      content:
-        "안녕 !\n\n 안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕",
-      apply: 4,
-      applyNow: 4,
-      startDay: "2024-05-16T07:48:58.540Z",
-      endDay: "2024-04-29",
+      article_title: "[express] 스터디원 모집합니다.",
+      article_content: "안녕 !\n\n 안녕안녕 ...",
+      article_apply: 4,
+      article_applynow: 4,
+      article_startDay: "2020-03-02",
+      article_endDay: "2020-03-02",
       recruit: true,
-      findMentor: true,
-      mentorTag: "#열정적인#잘도와주는#멋진",
+      article_findMentor: true,
+      article_mentorTag: "#열정적인#잘도와주는#멋진",
     });
+
     console.log("서버랑 붙음");
   } catch (error) {
     console.error("DB연결 실패", error);

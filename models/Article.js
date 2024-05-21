@@ -1,35 +1,39 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
+const User = require("./Users");
 
 const Article = sequelize.define("Article", {
   article_no: {
     type: DataTypes.INTEGER,
-    allowNull: false,
     primaryKey: true,
     autoIncrement: true,
   },
-  articleMemberId: {
+  article_memberId: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   user_no: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: User,
+      key: "user_no",
+    },
   },
   articleType: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  likes: {
+  article_likes: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
   },
-  title: {
+  article_title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  content: {
+  article_content: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -37,28 +41,28 @@ const Article = sequelize.define("Article", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-  apply: {
+  article_apply: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  applyNow: {
+  article_applynow: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
   },
-  startDay: {
-    type: DataTypes.STRING,
+  article_startDay: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
-  endDay: {
-    type: DataTypes.STRING,
+  article_endDay: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
-  findMentor: {
+  article_findMentor: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-  mentorTag: {
+  article_mentorTag: {
     type: DataTypes.STRING,
     allowNull: true,
   },
