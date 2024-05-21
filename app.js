@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { Sequelize, DataTypes } = require("sequelize");
+const { tokenAuthMiddleware } = require("./middleware/auth");
+
 // const sequelize = new Sequelize("test", "root", "Abcd1234!", {
 //   host: "localhost",
 //   dialect: "mysql",
@@ -10,108 +11,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 // const sequelize = new Sequelize("mysql://root:Abcd1234!@localhost:3306/test");
 
 // const sequelize = new Sequelize("sqlite::memory:");
-const sequelize = new Sequelize({
-  host: "localhost",
-  dialect: "sqlite",
-  storage: "database.sqlite",
-});
-
-const User = sequelize.define("User", {
-  user_no: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-
-  id: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  pwd: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  role: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  tel: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
-
-const Article = sequelize.define("Article", {
-  article_no: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  articleMemberId: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  user_no: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  articleType: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  likes: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  content: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  recruit: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  apply: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  applyNow: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  startDay: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  endDay: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  findMentor: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  mentorTag: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-});
 
 const initDatabase = async () => {
   try {
@@ -177,25 +76,6 @@ app.use(cors(corsOptions));
 const PORT = process.env.PORT || 8080;
 
 //토큰 검증 미들웨어 함수
-const tokenAuthMiddleware = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
-
-  if (!authHeader || !token) {
-    return res.status(403).send("비정상 접근입니다.");
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET_KEY);
-    req.user = decoded;
-  } catch (err) {
-    console.log(err);
-    return res.status(401).send("정상적이지 않은 토큰");
-  }
-
-  //어떤 요청을 하기 전에 실행한 다음에 본 코드를 실행하게하는 함수
-  next();
-};
 
 /**
  * 회원가입
