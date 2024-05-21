@@ -1,8 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const Article = require("./Article");
 const User = require("./Users");
-const Qreply = require("./Qreply");
 
 const Career = sequelize.define("Career", {
   career_no: {

@@ -1,10 +1,10 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const Article = require("./Article");
 const User = require("./Users");
+const Article = require("./Article");
 
-const Apply = sequelize.define("Apply", {
-  apply_no: {
+const Dibs = sequelize.define("Dibs", {
+  dibs_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
@@ -25,10 +25,6 @@ const Apply = sequelize.define("Apply", {
       key: "article_no",
     },
   },
-  apply_result: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
 });
 
-module.exports = Apply;
+module.exports = Dibs;

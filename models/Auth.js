@@ -1,10 +1,9 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const Article = require("./Article");
 const User = require("./Users");
 
-const Apply = sequelize.define("Apply", {
-  apply_no: {
+const Auth = sequelize.define("Career", {
+  career_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
@@ -17,18 +16,18 @@ const Apply = sequelize.define("Apply", {
       key: "user_no",
     },
   },
-  article_no: {
-    type: DataTypes.BIGINT,
+  career_name: {
+    type: DataTypes.STRING(30),
     allowNull: false,
-    references: {
-      model: Article,
-      key: "article_no",
-    },
   },
-  apply_result: {
-    type: DataTypes.BOOLEAN,
+  career_startdate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  career_enddate: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
 });
 
-module.exports = Apply;
+module.exports = Career;
