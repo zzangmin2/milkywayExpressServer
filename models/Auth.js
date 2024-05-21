@@ -2,8 +2,8 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 const User = require("./Users");
 
-const Auth = sequelize.define("Career", {
-  career_no: {
+const Auth = sequelize.define("Auth", {
+  auth_no: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
@@ -16,18 +16,14 @@ const Auth = sequelize.define("Career", {
       key: "user_no",
     },
   },
-  career_name: {
-    type: DataTypes.STRING(30),
+  auth_refreshtoken: {
+    type: DataTypes.STRING(100),
     allowNull: false,
   },
-  career_startdate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  career_enddate: {
-    type: DataTypes.DATE,
+  auth_refreshtoken_expiration: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
 
-module.exports = Career;
+module.exports = Auth;
