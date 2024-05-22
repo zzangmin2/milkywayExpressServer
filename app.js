@@ -1,10 +1,19 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const tokenAuthMiddleware = require("./middleware/auth");
-const User = require("./models/Users");
-const Article = require("./models/Article");
+// const User = require("./models/User");
+// const Article = require("./models/Article");
+const db = require("./models/index");
+const User = db.User;
+const Article = db.Article;
 const sequelize = require("./config/Database");
+
+/**
+ * index.js에서 관계 정의하는걸로 이해하고 구성했는데 관계 정립안된 모델들 있음 / 데이터베이스 이름 milkyway_express로 만들고 생성 확인
+ */
 
 // const sequelize = new Sequelize("test", "root", "Abcd1234!", {
 //   host: "localhost",
@@ -17,6 +26,7 @@ const sequelize = require("./config/Database");
 const initDatabase = async () => {
   try {
     await sequelize.authenticate();
+    await db.sequelize.sync({ force: true });
 
     // await Article.sync({ force: true });
     // await User.sync({ force: true });
@@ -61,7 +71,7 @@ const initDatabase = async () => {
   }
 };
 
-const JWT_SECRET_KEY = "secretkey";
+const JWT_SECRET_KEY = process.env.SECRET_KEY;
 
 const corsOptions = {
   origin: "http://localhost:5173",
