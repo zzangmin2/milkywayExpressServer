@@ -39,20 +39,41 @@ db.Apply = Apply;
 
 /**
  * 질문답변 관계설정   ( 유저와 질문 답변은 1:N / 질문 답변은 1:1 )
+ * ( feat: 관계설정에서 option설정을 하는게 있어서 user_no가 변경되거나 삭제되면 그에 맞게 삭제 또는 변경되게 옵션추가 )
  */
-User.hasMany(Qreply, { foreignKey: "user_no" });
+User.hasMany(Qreply, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Qreply.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasMany(Areply, { foreignKey: "user_no" });
+User.hasMany(Areply, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Areply.belongsTo(User, { foreignKey: "user_no" });
 
-Article.hasMany(Qreply, { foreignKey: "article_no" });
+Article.hasMany(Qreply, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Qreply.belongsTo(Article, { foreignKey: "article_no" });
 
-Article.hasMany(Areply, { foreignKey: "article_no" });
+Article.hasMany(Areply, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Areply.belongsTo(Article, { foreignKey: "article_no" });
 
-Qreply.hasOne(Areply, { foreignKey: "qreply_no" });
+Qreply.hasOne(Areply, {
+  foreignKey: "qreply_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Areply.belongsTo(Qreply, { foreignKey: "qreply_no" });
 
 /**
@@ -61,19 +82,39 @@ Areply.belongsTo(Qreply, { foreignKey: "qreply_no" });
  * ( 유저와 멘토정보, 회원정보는 1:1? )   * + erd에서는 1:n관계인데 한 회원이 한개의 학생, 멘토정보를 가진다고 이해해서 1:1로 (hasOne) 만듬
  */
 
-User.hasMany(Career, { foreignKey: "user_no" });
+User.hasMany(Career, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Career.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasMany(Auth, { foreignKey: "user_no" });
+User.hasMany(Auth, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Auth.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasMany(Certification, { foreignKey: "user_no" });
+User.hasMany(Certification, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Certification.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasOne(StudentInfo, { foreignKey: "user_no" });
+User.hasOne(StudentInfo, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 StudentInfo.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasOne(MentorInfo, { foreignKey: "user_no" });
+User.hasOne(MentorInfo, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 StudentInfo.belongsTo(User, { foreignKey: "user_no" });
 
 module.exports = db;
