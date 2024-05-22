@@ -24,7 +24,6 @@ db.sequelize = sequelize;
 /**
  * app.js에서 사용할때 require로 db불러오고 사용할 모델들 객체할당
  */
-
 db.User = User;
 db.Article = Article;
 db.StudentInfo = StudentInfo;
@@ -38,8 +37,8 @@ db.Areply = Areply;
 db.Apply = Apply;
 
 /**
- * 질문답변 관계설정   ( 유저와 질문 답변은 1:N / 질문 답변은 1:1 )
- * ( feat: 관계설정에서 option설정을 하는게 있어서 user_no가 변경되거나 삭제되면 그에 맞게 삭제 또는 변경되게 옵션추가 )
+ * 질문답변 관계설정 ( 유저와 질문 답변은 1:N / 질문 답변은 1:1 )
+ * ( 관계설정에서 option설정을 통해 user_no가 변경되거나 삭제되면 그에 맞게 삭제 또는 변경되도록 옵션 추가 )
  */
 User.hasMany(Qreply, {
   foreignKey: "user_no",
@@ -76,12 +75,25 @@ Qreply.hasOne(Areply, {
 });
 Areply.belongsTo(Qreply, { foreignKey: "qreply_no" });
 
-/**
- * 자격증, 유저인증 관련된 관계설정
- * ( 유저와 auth{토큰}은 1:1 / 자격증과 경력사항은 1:N )
- * ( 유저와 멘토정보, 회원정보는 1:1? )   * + erd에서는 1:n관계인데 한 회원이 한개의 학생, 멘토정보를 가진다고 이해해서 1:1로 (hasOne) 만듬
- */
+User.hasMany(Apply, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Apply.belongsTo(User, { foreignKey: "user_no" });
 
+Article.hasMany(Apply, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Apply.belongsTo(Article, { foreignKey: "article_no" });
+
+/**
+ * 자격증, 유저 인증, 회원정보 관련된 관계 설정
+ * ( 유저와 auth{토큰}은 1:1 / 자격증과 경력사항은 1:N )
+ * ( 유저와 멘토 정보, 회원 정보는 1:1 )
+ */
 User.hasMany(Career, {
   foreignKey: "user_no",
   onDelete: "CASCADE",
@@ -115,6 +127,23 @@ User.hasOne(MentorInfo, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-StudentInfo.belongsTo(User, { foreignKey: "user_no" });
+MentorInfo.belongsTo(User, { foreignKey: "user_no" });
+
+/**
+ * 찜은 1:N
+ */
+User.hasMany(Dibs, {
+  foreignKey: "user_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Dibs.belongsTo(User, { foreignKey: "user_no" });
+
+Article.hasMany(Dibs, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+Dibs.belongsTo(Article, { foreignKey: "article_no" });
 
 module.exports = db;
