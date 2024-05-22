@@ -1,5 +1,4 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config();
 
 const sequelize = new Sequelize({
   dialect: "mysql",
@@ -7,6 +6,6 @@ const sequelize = new Sequelize({
   port: 3306,
   username: "root",
   password: process.env.DB_PASSWORD,
-  database: "milkyway",
+  database: "milkyway_express",
 });
 module.exports = sequelize;
