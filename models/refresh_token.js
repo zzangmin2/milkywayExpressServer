@@ -1,17 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 const member = require("./member");
-const article = require("./article");
 
-const apply = sequelize.define(
-  "apply",
+const refresh_token = sequelize.define(
+  "refresh_token",
   {
-    apply_no: {
+    refresh_token_no: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    member_no: {
+    refresh_token_member_no: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
@@ -19,22 +18,14 @@ const apply = sequelize.define(
         key: "member_no",
       },
     },
-    article_no: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: article,
-        key: "article_no",
-      },
-    },
-    apply_result: {
+    refresh_token_refreshtoken: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
   },
   {
-    tableName: "apply",
+    tableName: "refresh_token",
   }
 );
 
-module.exports = apply;
+module.exports = refresh_token;

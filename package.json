@@ -8,5 +8,8 @@
     "node": "^22.2.0",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1"
   }
 }

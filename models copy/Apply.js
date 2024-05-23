@@ -1,40 +1,40 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const member = require("./member");
-const article = require("./article");
+const Article = require("./Article");
+const User = require("./User");
 
-const apply = sequelize.define(
-  "apply",
+const Apply = sequelize.define(
+  "Apply",
   {
     apply_no: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    member_no: {
-      type: DataTypes.BIGINT,
+    user_no: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: member,
-        key: "member_no",
+        model: User,
+        key: "user_no",
       },
     },
     article_no: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: article,
+        model: Article,
         key: "article_no",
       },
     },
     apply_result: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },
   {
-    tableName: "apply",
+    tableName: "Apply",
   }
 );
 
-module.exports = apply;
+module.exports = Apply;
