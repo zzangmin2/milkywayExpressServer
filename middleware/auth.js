@@ -17,7 +17,6 @@ const tokenAuthMiddleware = (req, res, next) => {
     return res.status(401).send("정상적이지 않은 토큰");
   }
 
-  //어떤 요청을 하기 전에 실행한 다음에 본 코드를 실행하게하는 함수
   next();
 };
 
