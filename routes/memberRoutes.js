@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const db = require("../models/index");
-const User = db.User;
+const member = db.member;
 const JWT_SECRET_KEY = process.env.SECRET_KEY;
 
 /**
  * 회원 전체 조회
  */
 router.get("/info", async (req, res) => {
-  const result = await User.findAll();
+  const result = await member.findAll();
   res.send(result);
 });
 
@@ -20,7 +20,7 @@ router.get("/info", async (req, res) => {
 router.post("/signup", async (req, res) => {
   const { id, pwd, name, email, role, tel } = req.body;
   try {
-    const result = await User.create({
+    const result = await member.create({
       id,
       pwd,
       name,
@@ -40,10 +40,10 @@ router.post("/signup", async (req, res) => {
  */
 router.post("/signup/checkId", async (req, res) => {
   const { memberId } = req.body;
-  const users = await User.findAll();
+  const members = await member.findAll();
 
   try {
-    if (!users.find((user) => user.user_id === memberId)) {
+    if (!members.find((member) => member.member_id === memberId)) {
       res.status(200).send("중복된 아이디 없음");
     }
   } catch (err) {
@@ -57,16 +57,17 @@ router.post("/signup/checkId", async (req, res) => {
  */
 router.post("/login", async (req, res) => {
   const { memberId, memberPassword } = req.body;
-  const users = await User.findAll();
-  const user = users.find(
-    (user) => user.user_id === memberId && user.user_pwd === memberPassword
+  const members = await member.findAll();
+  const member = members.find(
+    (member) =>
+      member.member_id === memberId && member.member_pwd === memberPassword
   );
-  if (user) {
-    const accessToken = jwt.sign({ id: user.user_id }, JWT_SECRET_KEY, {
+  if (member) {
+    const accessToken = jwt.sign({ id: member.member_id }, JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
-    const userName = user.user_name;
-    res.json({ accessToken, userName });
+    const memberName = member.member_name;
+    res.json({ accessToken, memberName });
   } else {
     res.status(401).send("로그인 실패");
   }

@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const db = require("./models/index");
 const sequelize = require("./config/Database");
-const userRoutes = require("./routes/userRoutes");
+const memberRoutes = require("./routes/memberRoutes");
 const postRoutes = require("./routes/postRoutes");
 const insertDummyData = require("./utils/insertDummyData");
 
@@ -54,7 +54,7 @@ const PORT = process.env.PORT || 8080;
 /**
  * 라우터 설정
  */
-app.use("/", userRoutes);
+app.use("/", memberRoutes);
 app.use("/posts", postRoutes);
 
 app.listen(PORT, () => {

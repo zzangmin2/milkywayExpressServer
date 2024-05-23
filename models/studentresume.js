@@ -1,17 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 const member = require("./member");
-const article = require("./article");
 
-const apply = sequelize.define(
-  "apply",
+const studentresume = sequelize.define(
+  "studentresume",
   {
-    apply_no: {
+    studentresume_no: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    member_no: {
+    studentresume_member_no: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
@@ -19,22 +18,26 @@ const apply = sequelize.define(
         key: "member_no",
       },
     },
-    article_no: {
-      type: DataTypes.BIGINT,
+    studentresume_grade: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: article,
-        key: "article_no",
-      },
     },
-    apply_result: {
+    studentresume_locate: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    studentresume_onelineshow: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    studentresume_major: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
   },
   {
-    tableName: "apply",
+    tableName: "studentresume",
   }
 );
 
-module.exports = apply;
+module.exports = studentresume;

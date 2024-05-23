@@ -1,35 +1,31 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const User = require("./User");
+const member = require("./member");
 
-const Auth = sequelize.define(
-  "Auth",
+const auth = sequelize.define(
+  "auth",
   {
     auth_no: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    user_no: {
-      type: DataTypes.INTEGER,
+    auth_member_no: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
-        model: User,
-        key: "user_no",
+        model: member,
+        key: "member_no",
       },
     },
     auth_refreshtoken: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    auth_refreshtoken_expiration: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
   },
   {
-    tableName: "Auth",
+    tableName: "auth",
   }
 );
 
-module.exports = Auth;
+module.exports = auth;

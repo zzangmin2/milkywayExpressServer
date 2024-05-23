@@ -1,21 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const member = require("./member");
+const User = require("./User");
 
-const certification = sequelize.define(
-  "certification",
+const Certification = sequelize.define(
+  "Certification",
   {
     cert_no: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    cert_member: {
-      type: DataTypes.BIGINT,
+    user_no: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: member,
-        key: "member_no",
+        model: User,
+        key: "user_no",
       },
     },
     cert_name: {
@@ -24,9 +24,8 @@ const certification = sequelize.define(
     },
   },
   {
-    createdAt: "cert_date",
-    tableName: "certification",
+    tableName: "Certification",
   }
 );
 
-module.exports = certification;
+module.exports = Certification;

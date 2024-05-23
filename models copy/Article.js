@@ -1,12 +1,12 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const member = require("./member");
+const User = require("./User");
 
-const article = sequelize.define(
-  "article",
+const Article = sequelize.define(
+  "Article",
   {
     article_no: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -14,15 +14,15 @@ const article = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    member_no: {
-      type: DataTypes.BIGINT,
+    user_no: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: member,
-        key: "member_no",
+        model: User,
+        key: "user_no",
       },
     },
-    article_type: {
+    articleType: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -39,52 +39,39 @@ const article = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // recruitment_state: {
-    //   type: DataTypes.BOOLEAN,
-    //   allowNull: false,
-    // },
+    recruit: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     article_apply: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    apply_now: {
+    article_applynow: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
     },
-    article_start_day: {
-      type: DataTypes.STRING,
+    article_startDay: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
-    article_end_day: {
-      type: DataTypes.STRING,
+    article_endDay: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
-    article_find_mentor: {
+    article_findMentor: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    article_mentor_tag: {
+    article_mentorTag: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    article_recruit: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    article_con_info: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    article_con_method: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
-    createdAt: "article_regdate",
-    tableName: "article",
+    tableName: "Article",
   }
 );
 
-module.exports = article;
+module.exports = Article;

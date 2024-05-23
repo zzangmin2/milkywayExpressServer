@@ -1,17 +1,15 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../config/Database");
 
-const User = require("./User");
-const Article = require("./Article");
-const Apply = require("./Apply");
-const Qreply = require("./Qreply");
-const Areply = require("./Areply");
-const Career = require("./Career");
-const Certification = require("./Certification");
-const Auth = require("./Auth");
-const Dibs = require("./Dibs");
-const StudentInfo = require("./StudentInfo");
-const MentorInfo = require("./MentorInfo");
+const member = require("./member");
+const article = require("./article");
+const apply = require("./apply");
+const career = require("./career");
+const certification = require("./certification");
+const auth = require("./auth");
+const student_info = require("./student_info");
+const studentresume = require("./studentresume");
+const refresh_token = require("./refresh_token");
 
 /**
  * 객체 초기화
@@ -22,58 +20,54 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 /**
- * app.js에서 사용할때 require로 db불러오고 사용할 모델들 객체할당
+ * app.js에서 사용할 때 require로 db를 불러오고 사용할 모델들 객체 할당
  */
 
-db.User = User;
-db.Article = Article;
-db.StudentInfo = StudentInfo;
-db.MentorInfo = MentorInfo;
-db.Certification = Certification;
-db.Career = Career;
-db.Dibs = Dibs;
-db.Auth = Auth;
-db.Qreply = Qreply;
-db.Areply = Areply;
-db.Apply = Apply;
+db.member = member;
+db.article = article;
+db.student_info = student_info;
+db.certification = certification;
+db.career = career;
+db.auth = auth;
+db.apply = apply;
+db.refresh_token = refresh_token;
+db.studentresume = studentresume;
 
 /**
- * 질문답변 관계설정   ( 유저와 질문 답변은 1:N / 질문 답변은 1:1 )
+ * 자격증, 유저 인증 관련된 관계 설정
+ * (유저와 auth {토큰}은 1:1, 자격증과 경력 사항은 1:N)
+ * (유저와 멘토 정보, 회원 정보는 1:1? ERD에서는 1:N 관계인데 한 회원이 한 개의 학생, 멘토 정보를 가진다고 이해해서 1:1로 만듬)
  */
-User.hasMany(Qreply, { foreignKey: "user_no" });
-Qreply.belongsTo(User, { foreignKey: "user_no" });
 
-User.hasMany(Areply, { foreignKey: "user_no" });
-Areply.belongsTo(User, { foreignKey: "user_no" });
+// member.hasMany(career, { foreignKey: "member_no" });
+// career.belongsTo(member, { foreignKey: "member_no" });
 
-Article.hasMany(Qreply, { foreignKey: "article_no" });
-Qreply.belongsTo(Article, { foreignKey: "article_no" });
+// member.hasOne(auth, { foreignKey: "member_no" });
+// auth.belongsTo(member, { foreignKey: "member_no" });
 
-Article.hasMany(Areply, { foreignKey: "article_no" });
-Areply.belongsTo(Article, { foreignKey: "article_no" });
+// member.hasMany(certification, { foreignKey: "member_no" });
+// certification.belongsTo(member, { foreignKey: "member_no" });
 
-Qreply.hasOne(Areply, { foreignKey: "qreply_no" });
-Areply.belongsTo(Qreply, { foreignKey: "qreply_no" });
+// member.hasOne(student_info, { foreignKey: "member_no" });
+// student_info.belongsTo(member, { foreignKey: "member_no" });
+
+// member.hasOne(studentresume, { foreignKey: "member_no" });
+// studentresume.belongsTo(member, { foreignKey: "member_no" });
+
+// member.hasOne(refresh_token, { foreignKey: "member_no" });
+// refresh_token.belongsTo(member, { foreignKey: "member_no" });
 
 /**
- * 자격증, 유저인증 관련된 관계설정
- * ( 유저와 auth{토큰}은 1:1 / 자격증과 경력사항은 1:N )
- * ( 유저와 멘토정보, 회원정보는 1:1? )   * + erd에서는 1:n관계인데 한 회원이 한개의 학생, 멘토정보를 가진다고 이해해서 1:1로 (hasOne) 만듬
+ * 게시물 관련 관계 설정
  */
 
-User.hasMany(Career, { foreignKey: "user_no" });
-Career.belongsTo(User, { foreignKey: "user_no" });
+member.hasMany(article, { foreignKey: "member_no" });
+article.belongsTo(member, { foreignKey: "member_no" });
 
-User.hasMany(Auth, { foreignKey: "user_no" });
-Auth.belongsTo(User, { foreignKey: "user_no" });
+member.hasMany(apply, { foreignKey: "member_no" });
+apply.belongsTo(member, { foreignKey: "member_no" });
 
-User.hasMany(Certification, { foreignKey: "user_no" });
-Certification.belongsTo(User, { foreignKey: "user_no" });
-
-User.hasOne(StudentInfo, { foreignKey: "user_no" });
-StudentInfo.belongsTo(User, { foreignKey: "user_no" });
-
-User.hasOne(MentorInfo, { foreignKey: "user_no" });
-StudentInfo.belongsTo(User, { foreignKey: "user_no" });
+article.hasMany(apply, { foreignKey: "article_no" });
+apply.belongsTo(article, { foreignKey: "article_no" });
 
 module.exports = db;

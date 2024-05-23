@@ -1,39 +1,39 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const member = require("./member");
+const User = require("./User");
 
-const career = sequelize.define(
-  "career",
+const Career = sequelize.define(
+  "Career",
   {
     career_no: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    career_member_no: {
-      type: DataTypes.BIGINT,
+    user_no: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: member,
-        key: "member_no",
+        model: User,
+        key: "user_no",
       },
     },
     career_name: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(30),
       allowNull: false,
     },
     career_startdate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    career_startend: {
+    career_enddate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
   },
   {
-    tableName: "career",
+    tableName: "Career",
   }
 );
 
-module.exports = career;
+module.exports = Career;
