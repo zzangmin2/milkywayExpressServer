@@ -18,15 +18,15 @@ router.get("/info", async (req, res) => {
  * 이메일, 아이디, 비밀번호, 전화번호, 역할
  */
 router.post("/signup", async (req, res) => {
-  const { id, pwd, name, email, role, tel } = req.body;
+  const { id, password, name, email, role, tel } = req.body;
   try {
     const result = await member.create({
-      id,
-      pwd,
-      name,
-      email,
-      role,
-      tel,
+      member_id: id,
+      member_password: password,
+      member_name: name,
+      member_email: email,
+      member_role: role,
+      member_phonenum: tel,
     });
     res.status(200).send(result);
   } catch (err) {
@@ -40,10 +40,13 @@ router.post("/signup", async (req, res) => {
  */
 router.post("/signup/checkId", async (req, res) => {
   const { memberId } = req.body;
-  const members = await member.findAll();
 
   try {
-    if (!members.find((member) => member.member_id === memberId)) {
+    const existingMember = await member.findOne({
+      where: { member_id: memberId },
+    });
+
+    if (!existingMember) {
       res.status(200).send("중복된 아이디 없음");
     }
   } catch (err) {
@@ -57,12 +60,14 @@ router.post("/signup/checkId", async (req, res) => {
  */
 router.post("/login", async (req, res) => {
   const { memberId, memberPassword } = req.body;
-  const members = await member.findAll();
-  const member = members.find(
-    (member) =>
-      member.member_id === memberId && member.member_pwd === memberPassword
-  );
-  if (member) {
+  const findMember = await member.findOne({
+    where: {
+      member_id: memberId,
+      member_password: memberPassword,
+    },
+  });
+
+  if (findMember) {
     const accessToken = jwt.sign({ id: member.member_id }, JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
