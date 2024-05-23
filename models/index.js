@@ -39,14 +39,30 @@ db.studentresume = studentresume;
  * (유저와 멘토 정보, 회원 정보는 1:1? ERD에서는 1:N 관계인데 한 회원이 한 개의 학생, 멘토 정보를 가진다고 이해해서 1:1로 만듬)
  */
 
-// member.hasMany(career, { foreignKey: "member_no" });
-// career.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(career, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+career.belongsTo(member, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // member.hasOne(auth, { foreignKey: "member_no" });
 // auth.belongsTo(member, { foreignKey: "member_no" });
 
-// member.hasMany(certification, { foreignKey: "member_no" });
-// certification.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(certification, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+certification.belongsTo(member, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // member.hasOne(student_info, { foreignKey: "member_no" });
 // student_info.belongsTo(member, { foreignKey: "member_no" });
@@ -61,13 +77,54 @@ db.studentresume = studentresume;
  * 게시물 관련 관계 설정
  */
 
-member.hasMany(article, { foreignKey: "member_no" });
-article.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(article, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+article.belongsTo(member, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
-member.hasMany(apply, { foreignKey: "member_no" });
-apply.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(apply, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+apply.belongsTo(member, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
-article.hasMany(apply, { foreignKey: "article_no" });
-apply.belongsTo(article, { foreignKey: "article_no" });
+article.hasMany(apply, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+apply.belongsTo(article, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+// /**
+//  * 찜은 1:N ( 아직 찜 테이블 x )
+//  */
+// member.hasMany(Dibs, {
+//   foreignKey: "member_no",
+//   onDelete: "CASCADE",
+//   onUpdate: "CASCADE",
+// });
+// Dibs.belongsTo(member, { foreignKey: "member_no" });
+
+// article.hasMany(Dibs, {
+//   foreignKey: "article_no",
+//   onDelete: "CASCADE",
+//   onUpdate: "CASCADE",
+// });
+// Dibs.belongsTo(article, { foreignKey: "article_no" });
 
 module.exports = db;
