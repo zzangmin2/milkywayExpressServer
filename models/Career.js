@@ -23,11 +23,11 @@ const career = sequelize.define(
       allowNull: false,
     },
     career_startdate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     career_startend: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
   },

@@ -2,16 +2,9 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const db = require("../models/index");
+const { finished } = require("stream");
 const member = db.member;
 const JWT_SECRET_KEY = process.env.SECRET_KEY;
-
-/**
- * 회원 전체 조회
- */
-router.get("/info", async (req, res) => {
-  const result = await member.findAll();
-  res.send(result);
-});
 
 /**
  * 회원가입
@@ -68,11 +61,19 @@ router.post("/login", async (req, res) => {
   });
 
   if (findMember) {
-    const accessToken = jwt.sign({ id: member.member_id }, JWT_SECRET_KEY, {
-      expiresIn: "1h",
-    });
-    const memberName = member.member_name;
-    res.json({ accessToken, memberName });
+    const accessToken = jwt.sign(
+      {
+        memberId: findMember.member_id,
+        memberNo: findMember.member_no,
+        memberName: findMember.member_name,
+      },
+      JWT_SECRET_KEY,
+      {
+        expiresIn: "12h",
+      }
+    );
+    const memberName = findMember.member_name;
+    res.status(200).json({ accessToken, memberName });
   } else {
     res.status(401).send("로그인 실패");
   }

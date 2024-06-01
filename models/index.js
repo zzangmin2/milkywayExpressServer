@@ -4,7 +4,7 @@ const sequelize = require("../config/Database");
 const member = require("./member");
 const article = require("./article");
 const apply = require("./apply");
-const career = require("./career");
+const career = require("./Career");
 const certification = require("./certification");
 const auth = require("./auth");
 const student_info = require("./student_info");
@@ -22,6 +22,19 @@ db.sequelize = sequelize;
 /**
  * app.js에서 사용할 때 require로 db를 불러오고 사용할 모델들 객체 할당
  */
+
+// db = {
+//   ...db,
+//   member,
+//   article,
+//   student_info,
+//   certification,
+//   career,
+//   auth,
+//   apply,
+//   refresh_token,
+//   studentresume,
+// };
 
 db.member = member;
 db.article = article;
@@ -72,6 +85,9 @@ certification.belongsTo(member, {
 
 // member.hasOne(refresh_token, { foreignKey: "member_no" });
 // refresh_token.belongsTo(member, { foreignKey: "member_no" });
+
+studentresume.belongsTo(member, { foreignKey: "studentresume_member_no" });
+member.hasOne(studentresume, { foreignKey: "studentresume_member_no" });
 
 /**
  * 게시물 관련 관계 설정

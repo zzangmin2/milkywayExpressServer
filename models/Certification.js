@@ -22,10 +22,14 @@ const certification = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    cert_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
   {
-    createdAt: "cert_date",
     tableName: "certification",
+    timestamps: true,
   }
 );
 
