@@ -2,13 +2,11 @@ const express = require("express");
 const router = express.Router();
 const tokenAuthMiddleware = require("../middleware/auth");
 const db = require("../models/index");
+const { where } = require("sequelize");
 const member = db.member;
 const apply = db.apply;
 const article = db.article;
-
-/**
- * 400에러 코드가 아닌 다른 http 상태 코드 피드백 주셨어서 404로 통일함
- */
+const dibs = db.dibs;
 
 /**
  * 회원 기본 정보 조회
@@ -46,7 +44,7 @@ router.get("/info", tokenAuthMiddleware, async (req, res) => {
  */
 router.get("/applyinfo", tokenAuthMiddleware, async (req, res) => {
   try {
-    const { memberNo } = req.user.memberNo;
+    const { memberNo } = req.user;
     const user = await member.findOne({
       where: {
         member_no: memberNo,
@@ -103,6 +101,61 @@ router.get("/applyinfo", tokenAuthMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * 내가 찜한 프로젝트 조회 (마이페이지 dibs (찜))
+ */
+
+router.get("/dibsinfo", tokenAuthMiddleware, async (req, res) => {
+  try {
+    const { memberNo } = req.user;
+    const result = await dibs.findOne({
+      where: {
+        member_no: memberNo,
+      },
+      include: [
+        {
+          model: article,
+          attributes: [
+            "article_no",
+            "article_title",
+            "article_con_method",
+            "article_con_info",
+            "article_type",
+            "article_find_mentor",
+            "article_start_day",
+            "article_end_day",
+            "article_recruit",
+            "article_apply",
+            "apply_now",
+            "article_likes",
+          ],
+        },
+        { where: { article_no: member_No } },
+      ],
+    });
+
+    if (result) {
+      const article = user.map((article) => ({
+        cardArticle_no: article.article_no,
+        cardArticleType: article.article_type,
+        cardTitle: article.article_title,
+        cardFindMentor: article.article_find_mentor,
+        cardRecruit: article.article_recruit,
+        cardApply: article.article_apply,
+        cardApplyNow: article.apply_now,
+        cardLikes: article.article_likes,
+        cardEndDay: article.article_end_day,
+        cardStartDay: article.article_start_day,
+      }));
+      res.status(200).json({ article });
+    } else {
+      res.status(404).json({ message: "error" });
+    }
+  } catch (error) {
+    console.error("/dibsInfo 에러 : ", error);
+    res.status(500).json({ message: "error" });
+  }
+});
 /**
  * 내가 신청한 프로젝트 조회 (마이페이지 article)
  */

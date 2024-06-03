@@ -12,7 +12,7 @@ const studentresume = sequelize.define(
     },
     studentresume_member_no: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: member,
         key: "member_no",
@@ -20,22 +20,23 @@ const studentresume = sequelize.define(
     },
     studentresume_grade: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     studentresume_locate: {
       type: DataTypes.STRING(255),
-      allowNull: false,
+      allowNull: true,
     },
     studentresume_onelineshow: {
       type: DataTypes.STRING(255),
-      allowNull: false,
+      allowNull: true,
     },
     studentresume_major: {
       type: DataTypes.STRING(255),
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
+    timestamps: false,
     tableName: "studentresume",
   }
 );

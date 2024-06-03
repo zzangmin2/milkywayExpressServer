@@ -7,12 +7,12 @@ const tokenAuthMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
-    return res.status(403).send("비정상 접근입니다.");
+    return res.status(401).send("invaild");
   }
 
   const tokenParts = authHeader.split(" ");
   if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
-    return res.status(403).send("비정상 접근입니다.");
+    return res.status(401).send("invaild");
   }
 
   const token = tokenParts[1];
@@ -23,7 +23,7 @@ const tokenAuthMiddleware = (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    return res.status(401).send("정상적이지 않은 토큰");
+    return res.status(401).send("invaild");
   }
   // next();
 };
