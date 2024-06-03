@@ -25,6 +25,7 @@ const insertDummyData = require("./utils/insertDummyData");
 const initDatabase = async () => {
   try {
     // await sequelize.authenticate();
+
     // await db.sequelize.sync({ force: true });
 
     // insertDummyData();

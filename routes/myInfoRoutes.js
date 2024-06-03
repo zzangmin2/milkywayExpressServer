@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const tokenAuthMiddleware = require("../middleware/auth");
 const db = require("../models/index");
-const { where } = require("sequelize");
+const JWT_SECRET_KEY = process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
 const member = db.member;
 const apply = db.apply;
 const article = db.article;
@@ -108,34 +109,16 @@ router.get("/applyinfo", tokenAuthMiddleware, async (req, res) => {
 router.get("/dibsinfo", tokenAuthMiddleware, async (req, res) => {
   try {
     const { memberNo } = req.user;
-    const result = await dibs.findOne({
+
+    const dibsList = await dibs.findAll({
+      attributes: ["dibs_no", "article_no", "member_no"],
       where: {
         member_no: memberNo,
       },
-      include: [
-        {
-          model: article,
-          attributes: [
-            "article_no",
-            "article_title",
-            "article_con_method",
-            "article_con_info",
-            "article_type",
-            "article_find_mentor",
-            "article_start_day",
-            "article_end_day",
-            "article_recruit",
-            "article_apply",
-            "apply_now",
-            "article_likes",
-          ],
-        },
-        { where: { article_no: member_No } },
-      ],
     });
 
-    if (result) {
-      const article = user.map((article) => ({
+    if (dibsList) {
+      const articles = dibsList.map((article) => ({
         cardArticle_no: article.article_no,
         cardArticleType: article.article_type,
         cardTitle: article.article_title,
@@ -147,10 +130,11 @@ router.get("/dibsinfo", tokenAuthMiddleware, async (req, res) => {
         cardEndDay: article.article_end_day,
         cardStartDay: article.article_start_day,
       }));
-      res.status(200).json({ article });
-    } else {
-      res.status(404).json({ message: "error" });
+      res.status(200).json(articles);
     }
+    // else {
+    //   res.status(404).json({ message: "error" });
+    // }
   } catch (error) {
     console.error("/dibsInfo 에러 : ", error);
     res.status(500).json({ message: "error" });
@@ -197,7 +181,7 @@ router.get("/articleinfo", tokenAuthMiddleware, async (req, res) => {
         cardStartDay: article.article_start_day,
         cardEndDay: article.article_end_day,
       }));
-      res.status(200).json({ article });
+      res.status(200).json(article);
     } else {
       res.status(404).json({ message: "Articles not found" });
     }
@@ -215,11 +199,11 @@ router.put("/update", tokenAuthMiddleware, async (req, res) => {
     const { memberName, memberEmail, memberPhoneNum } = req.body;
     const { memberNo } = req.user;
 
-    const [updated] = await member.update(
+    const updated = await member.update(
       {
         member_name: memberName,
         member_email: memberEmail,
-        member_phonNum: memberPhoneNum,
+        member_phonenum: memberPhoneNum,
       },
       {
         where: { member_No: memberNo },
@@ -227,9 +211,30 @@ router.put("/update", tokenAuthMiddleware, async (req, res) => {
     );
 
     if (updated) {
-      res.status(200).json({ message: "회원 정보가 업데이트되었습니다." });
+      const findMember = await member.findOne({
+        where: {
+          member_no: memberNo,
+        },
+      });
+
+      const accessToken = jwt.sign(
+        {
+          memberId: findMember.member_id,
+          memberNo: findMember.member_no,
+          memberName: findMember.member_name,
+        },
+        JWT_SECRET_KEY,
+        {
+          expiresIn: "12h",
+        }
+      );
+      res.status(200).json({
+        message: "회원 정보가 업데이트되었습니다.",
+        accessToken,
+        memberName,
+      });
     } else {
-      res.status(404).json({ message: "회원을 찾을 수 없습니다." });
+      return res.status(404).json({ message: "회원을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.error("/update 에러 ( myinfo )", error);
@@ -238,22 +243,3 @@ router.put("/update", tokenAuthMiddleware, async (req, res) => {
 });
 
 module.exports = router;
-
-// [
-//   {
-//     "applyNo": 1,
-//     "article": {
-//       "aritcleNo": 1,
-//       "applyMember": {
-//         "memberName": "이태석",
-//         "memberNo": 1
-
-//       },
-//       "applyTitle": "됏다",
-//       "conMethod": null,
-//       "conInfo": null
-//     },
-//     "applyDate": "2024-05-23T15:16:23.226669",
-//     "appyResult": "신청"
-//   }
-// ]

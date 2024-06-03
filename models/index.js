@@ -120,18 +120,18 @@ apply.belongsTo(article, {
 // /**
 //  * 찜은 1:N ( 아직 찜 테이블 x )
 //  */
-// member.hasMany(dibs, {
-//   foreignKey: "member_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// dibs.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(dibs, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(member, { foreignKey: "member_no" });
 
-// article.hasMany(dibs, {
-//   foreignKey: "article_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// dibs.belongsTo(article, { foreignKey: "article_no" });
+article.hasMany(dibs, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(article, { foreignKey: "article_no" });
 
 module.exports = db;

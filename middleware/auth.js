@@ -20,12 +20,11 @@ const tokenAuthMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.user = decoded;
-    next();
   } catch (err) {
     console.log(err);
     return res.status(401).send("invaild");
   }
-  // next();
+  next();
 };
 
 module.exports = tokenAuthMiddleware;
