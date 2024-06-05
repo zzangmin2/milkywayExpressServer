@@ -24,13 +24,11 @@ router.get("/info", tokenAuthMiddleware, async (req, res) => {
 
     if (result) {
       const memberInfo = {
-        member: {
-          member_email: result.member_email,
-          member_name: result.member_name,
-          member_phoneNum: result.member_phonenum,
-        },
+        memberEmail: result.member_email,
+        memberName: result.member_name,
+        memberPhoneNum: result.member_phonenum,
       };
-      res.status(200).json({ memberInfo });
+      res.status(200).json(memberInfo);
     } else {
       res.status(404).send("멤버를 찾을 수 없습니다.");
     }
@@ -46,26 +44,26 @@ router.get("/info", tokenAuthMiddleware, async (req, res) => {
 router.get("/applyinfo", tokenAuthMiddleware, async (req, res) => {
   try {
     const { memberNo } = req.user;
-    const user = await member.findOne({
+    const userApply = await member.findOne({
       where: {
         member_no: memberNo,
       },
       include: [
         {
           model: apply,
-          attributes: ["apply_no", "apply_result"], // 필요한 apply 속성만 선택
+          attributes: ["apply_no", "apply_result", "apply_date"],
           include: [
             {
               model: article,
               attributes: [
-                "article_no", // 필요한 article 속성만 선택
+                "article_no",
                 "article_title",
                 "article_con_method",
                 "article_con_info",
               ],
               include: [
                 {
-                  model: member, // article의 member 정보 가져오기
+                  model: member,
                   attributes: ["member_no", "member_name"],
                 },
               ],
@@ -75,24 +73,25 @@ router.get("/applyinfo", tokenAuthMiddleware, async (req, res) => {
       ],
     });
 
-    if (user) {
-      const apply = user.applies.map((apply) => ({
+    if (userApply) {
+      const apply = userApply.applies.map((apply) => ({
         applyNo: apply.apply_no,
-        article: {
+        applyArticle: {
           articleNo: apply.article.article_no,
-          applyMember: {
+          conMethod: apply.article.article_con_method,
+          conInfo: apply.article.article_con_info,
+          member: {
             memberName: apply.article.member.member_name,
             memberNo: apply.article.member.member_no,
           },
-          applyTitle: apply.article.article_title,
-          conMethod: apply.article.article_con_method,
-          conInfo: apply.article.article_con_info,
+          title: apply.article.article_title,
         },
-        applyDate: apply.createdAt,
+
         applyResult: apply.apply_result,
+        applyDate: apply.apply_date,
       }));
 
-      res.status(200).json({ apply });
+      res.status(200).json(apply);
     } else {
       res.status(404).json({ message: "error" });
     }
@@ -115,26 +114,47 @@ router.get("/dibsinfo", tokenAuthMiddleware, async (req, res) => {
       where: {
         member_no: memberNo,
       },
+      include: [
+        {
+          model: article,
+          attributes: [
+            "article_no",
+            "article_memberId",
+            "article_type",
+            "article_likes",
+            "article_title",
+            "article_content",
+            "article_recruit",
+            "article_apply",
+            "apply_now",
+            "article_start_day",
+            "article_end_day",
+            "article_con_info",
+            "article_con_method",
+            "article_find_mentor",
+            "article_mentor_tag",
+          ],
+        },
+      ],
     });
 
     if (dibsList) {
-      const articles = dibsList.map((article) => ({
+      const dibs = dibsList.map((article) => ({
         cardArticle_no: article.article_no,
-        cardArticleType: article.article_type,
-        cardTitle: article.article_title,
-        cardFindMentor: article.article_find_mentor,
-        cardRecruit: article.article_recruit,
-        cardApply: article.article_apply,
-        cardApplyNow: article.apply_now,
-        cardLikes: article.article_likes,
-        cardEndDay: article.article_end_day,
-        cardStartDay: article.article_start_day,
+        cardArticleType: article.article.article_type,
+        cardTitle: article.article.article_title,
+        cardFindMentor: article.article.article_find_mentor,
+        cardRecruit: article.article.article_recruit,
+        cardApply: article.article.article_apply,
+        cardApplyNow: article.article.apply_now,
+        cardLikes: article.article.article_likes,
+        cardEndDay: article.article.article_end_day,
+        cardStartDay: article.article.article_start_day,
       }));
-      res.status(200).json(articles);
+      res.status(200).json(dibs);
+    } else {
+      res.status(404).json({ message: "error" });
     }
-    // else {
-    //   res.status(404).json({ message: "error" });
-    // }
   } catch (error) {
     console.error("/dibsInfo 에러 : ", error);
     res.status(500).json({ message: "error" });
@@ -183,7 +203,7 @@ router.get("/articleinfo", tokenAuthMiddleware, async (req, res) => {
       }));
       res.status(200).json(article);
     } else {
-      res.status(404).json({ message: "Articles not found" });
+      res.status(404).json({ message: "not found" });
     }
   } catch (error) {
     console.error("/articleinfo 에러 : ", error);

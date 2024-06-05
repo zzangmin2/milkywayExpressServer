@@ -4,11 +4,9 @@ const member = db.member;
 const article = db.article;
 const career = db.career;
 const apply = db.apply;
+const dibs = db.dibs;
 
 const insertDummyData = async () => {
-  /**
-   * faker.js로 더미데이터 삽입하기
-   */
   const members = [];
 
   const specialMember = await member.create({
@@ -48,8 +46,8 @@ const insertDummyData = async () => {
         article_recruit: faker.datatype.boolean(),
         article_apply: faker.number.int({ min: 0, max: 10 }),
         apply_now: faker.number.int({ min: 0, max: 10 }),
-        article_start_day: faker.date.past().toISOString().split("T")[0], // YYYY-MM-DD 형식으로 변환
-        article_end_day: faker.date.future().toISOString().split("T")[0], // YYYY-MM-DD 형식으로 변환
+        article_start_day: faker.date.past().toISOString().split("T")[0],
+        article_end_day: faker.date.future().toISOString().split("T")[0],
         article_con_info: faker.lorem.word(),
         article_con_method: faker.lorem.word(),
         article_find_mentor: faker.datatype.boolean(),
@@ -61,7 +59,6 @@ const insertDummyData = async () => {
     );
   }
 
-  // member_no가 21 및 12인 멤버에 대한 추가 데이터 생성
   const specialMembers = members.filter(
     (member) =>
       member.member_no === specialMember.member_no || member.member_no === 12
@@ -98,7 +95,7 @@ const insertDummyData = async () => {
     const member = faker.helpers.arrayElement(members);
     await career.create({
       career_member_no: member.member_no,
-      career_name: faker.lorem.sentence(),
+      career_name: faker.lorem.sentence(4),
       career_startdate: faker.date.past(5).toISOString().split("T")[0],
       career_startend: faker.date.past(1).toISOString().split("T")[0],
     });
@@ -111,6 +108,7 @@ const insertDummyData = async () => {
       member_no: member.member_no,
       article_no: article.article_no,
       apply_result: faker.helpers.arrayElement(["등록", "신청", "선정"]),
+      apply_date: "2020-11-30",
     });
   }
   for (let i = 0; i < 30; i++) {
@@ -120,6 +118,15 @@ const insertDummyData = async () => {
       member_no: specialMember.member_no,
       article_no: article.article_no,
       apply_result: faker.helpers.arrayElement(["등록", "신청", "선정"]),
+      apply_date: "2020-12-30",
+    });
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const article = faker.helpers.arrayElement(articles);
+    await dibs.create({
+      member_no: specialMember.member_no,
+      article_no: article.article_no,
     });
   }
 };

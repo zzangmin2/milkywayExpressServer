@@ -33,6 +33,7 @@ const career = sequelize.define(
   },
   {
     tableName: "career",
+    timestamps: "false",
   }
 );
 

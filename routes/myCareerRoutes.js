@@ -16,7 +16,7 @@ router.get("/myResume/basicInfo", tokenAuthMiddleware, async (req, res) => {
     const { memberNo } = req.user;
 
     if (!memberNo) {
-      return res.status(400).json({ message: "member_no가 없습니다." });
+      return res.status(403).json({ message: "member_no가 없습니다." });
     }
 
     const memberResult = await member.findOne({
@@ -60,7 +60,7 @@ router.get("/myResume/basicInfo", tokenAuthMiddleware, async (req, res) => {
 });
 
 /**
- * 내가 등록한 프로젝트 카드 조회 ( 마이페이지 apply )
+ * 이력서 경력정보 조회
  */
 router.get(
   "/myResume/careerAndCertification",
@@ -69,7 +69,7 @@ router.get(
     try {
       const { memberNo } = req.user;
       if (!memberNo) {
-        return res.status(400).json({ message: "member_no가 없습니다." });
+        return res.status(403).json({ message: "member_no가 없습니다." });
       }
       const careerResult = await career.findAll({
         where: { career_member_no: memberNo },
@@ -82,8 +82,8 @@ router.get(
 
       const careerDtoList = careerResult.map((career) => ({
         carName: career.career_name,
-        carStartDay: career.carStartDay,
-        carEndDay: career.carEndDay,
+        carStartDay: career.career_startdate,
+        carEndDay: career.career_startend,
       }));
 
       const certificationDtoList = certificationResult.map((certification) => ({
@@ -109,11 +109,9 @@ router.post("/member/update/info", tokenAuthMiddleware, async (req, res) => {
   try {
     const { studentMajor, studentLocate, studentOneLineShow } = req.body;
 
-    console.log(req.body);
-
     const { memberNo } = req.user;
     if (!memberNo) {
-      return res.status(404).json({ message: "member_no가 없습니다." });
+      return res.status(403).json({ message: "member_no가 없습니다." });
     }
     try {
       const [studentresumeResult, created] = await studentresume.findOrCreate({
@@ -128,16 +126,13 @@ router.post("/member/update/info", tokenAuthMiddleware, async (req, res) => {
       });
 
       if (!created) {
-        await studentresume.update({
-          studentresume_locate: studentLocate,
-          studentresume_major: studentMajor,
-          studentresume_onelineshow: studentOneLineShow,
-        });
+        return res.status(404).json({ message: "데이터가 이미 존재합니다." });
       }
-    } catch {
-      res.status(404).json({ message: "error" });
+
+      res.status(200).json({ message: "success" });
+    } catch (error) {
+      res.status(500).json({ message: "서버 오류", error });
     }
-    res.status(200).json({ message: "success" });
   } catch (error) {
     console.error(
       "/member/update/info 오류  (이력서 내 정보 수정(post)",
@@ -154,7 +149,7 @@ router.put("/member/modify/info", tokenAuthMiddleware, async (req, res) => {
     const { memberNo } = req.user;
     if (!memberNo) {
       return res
-        .status(404)
+        .status(403)
         .json({ message: "사용자 정보를 찾을 수 없습니다." });
     }
 
@@ -170,7 +165,7 @@ router.put("/member/modify/info", tokenAuthMiddleware, async (req, res) => {
     if (result) {
       res.status(200).json({ success: true });
     } else {
-      return res.status(404).json({ error: "error" });
+      res.status(404).json({ error: "error" });
     }
   } catch (error) {
     console.error("/member/modify/info 오류  (이력서 내 정보 수정(put)", error);
@@ -179,7 +174,7 @@ router.put("/member/modify/info", tokenAuthMiddleware, async (req, res) => {
 });
 
 /**
- * 내 이력서 경력 수정
+ * 내 이력서 경력 수정 ( post )
  */
 router.post("/member/update/profile", tokenAuthMiddleware, async (req, res) => {
   try {
@@ -188,19 +183,17 @@ router.post("/member/update/profile", tokenAuthMiddleware, async (req, res) => {
 
     if (!memberNo) {
       return res
-        .status(404)
+        .status(403)
         .json({ message: "사용자 정보를 찾을 수 업습니다." });
     }
 
-    console.log(careerDtoList);
+    // await career.destroy({
+    //   where: { career_member_no: memberNo },
+    // });
 
-    await career.destroy({
-      where: { career_member_no: memberNo },
-    });
-
-    await certification.destroy({
-      where: { cert_member: memberNo },
-    });
+    // await certification.destroy({
+    //   where: { cert_member: memberNo },
+    // });
 
     // 경력 정보 추가
 
@@ -228,10 +221,10 @@ router.post("/member/update/profile", tokenAuthMiddleware, async (req, res) => {
           });
         })
       );
-    } catch {
+      res.status(200).json({ message: "success" });
+    } catch (error) {
       res.status(404).json({ message: "error" });
     }
-    res.status(200).json({ message: "success" });
   } catch (error) {
     console.error(
       "/member/update/profile 오류 (이력서 내 경력 및 자격증 추가)",
@@ -241,6 +234,10 @@ router.post("/member/update/profile", tokenAuthMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * 경력 정보 수정 ( put )
+ */
+
 router.put("/member/modify/profile", tokenAuthMiddleware, async (req, res) => {
   try {
     const { careerDtoList, certificationDtoList } = req.body;
@@ -248,11 +245,9 @@ router.put("/member/modify/profile", tokenAuthMiddleware, async (req, res) => {
 
     if (!memberNo) {
       return res
-        .status(400)
+        .status(403)
         .json({ message: "사용자 정보를 찾을 수 없습니다." });
     }
-
-    console.log(certificationDtoList);
 
     await career.destroy({
       where: { career_member_no: memberNo },
@@ -266,50 +261,31 @@ router.put("/member/modify/profile", tokenAuthMiddleware, async (req, res) => {
     try {
       await Promise.all(
         careerDtoList.map(async (careerData) => {
-          await career.update(
-            {
-              career_name: careerData.carName,
-              career_startdate: moment(careerData.carStartDay).format(
-                "YYYY-MM-DD"
-              ),
-              career_startend: moment(careerData.carEndDay).format(
-                "YYYY-MM-DD"
-              ),
-            },
-            {
-              where: {
-                career_member_no: memberNo,
-                career_name: careerData.carName,
-              },
-            }
-          );
+          await career.create({
+            career_name: careerData.carName,
+            career_startdate: moment(careerData.carStartDay).format(
+              "YYYY-MM-DD"
+            ),
+            career_startend: moment(careerData.carEndDay).format("YYYY-MM-DD"),
+            career_member_no: memberNo,
+          });
         })
       );
 
-      // 자격증 정보 수정
+      // 자격증 정보 추가
       await Promise.all(
         certificationDtoList.map(async (certificationData) => {
-          await certification.update(
-            {
-              cert_name: certificationData.certName,
-              cert_date: moment(certificationData.certDate).format(
-                "YYYY-MM-DD"
-              ),
-            },
-            {
-              where: {
-                cert_member: memberNo,
-                cert_name: certificationData.certName,
-              },
-            }
-          );
+          await certification.create({
+            cert_name: certificationData.certName,
+            cert_date: moment(certificationData.certDate).format("YYYY-MM-DD"),
+            cert_member: memberNo,
+          });
         })
       );
-    } catch {
-      res.status(404).json({ message: "error" });
+      res.status(200).json({ message: "success" });
+    } catch (error) {
+      res.status(404).json({ message: "error", error });
     }
-
-    res.status(200).json({ message: "success" });
   } catch (error) {
     console.error(
       "/member/modify/profile 오류 (이력서 내 경력 및 자격증 수정)",

@@ -31,9 +31,16 @@ const apply = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    apply_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
   {
     tableName: "apply",
+    timestamps: true,
+    updatedAt: false,
+    createdAt: "apply_date",
   }
 );
 
