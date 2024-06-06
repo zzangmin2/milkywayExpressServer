@@ -68,10 +68,14 @@ router.post("/login", async (req, res) => {
   });
 
   if (findMember) {
-    const accessToken = jwt.sign({ id: member.member_id }, JWT_SECRET_KEY, {
-      expiresIn: "1h",
-    });
-    const memberName = member.member_name;
+    const accessToken = jwt.sign(
+      { id: findMember.member_id, no: findMember.member_no },
+      JWT_SECRET_KEY,
+      {
+        expiresIn: "3h",
+      }
+    );
+    const memberName = findMember.member_name;
     res.json({ accessToken, memberName });
   } else {
     res.status(401).send("로그인 실패");
