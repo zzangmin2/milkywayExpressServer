@@ -10,6 +10,7 @@ const auth = require("./auth");
 const student_info = require("./student_info");
 const studentresume = require("./studentresume");
 const refresh_token = require("./refresh_token");
+const dibs = require("./dibs");
 
 /**
  * 객체 초기화
@@ -32,6 +33,7 @@ db.auth = auth;
 db.apply = apply;
 db.refresh_token = refresh_token;
 db.studentresume = studentresume;
+db.dibs = dibs;
 
 /**
  * 자격증, 유저 인증 관련된 관계 설정
@@ -111,20 +113,20 @@ apply.belongsTo(article, {
 });
 
 // /**
-//  * 찜은 1:N ( 아직 찜 테이블 x )
+//  * 찜은 1:N
 //  */
-// member.hasMany(Dibs, {
-//   foreignKey: "member_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// Dibs.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(dibs, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(member, { foreignKey: "member_no" });
 
-// article.hasMany(Dibs, {
-//   foreignKey: "article_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// Dibs.belongsTo(article, { foreignKey: "article_no" });
+article.hasMany(dibs, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(article, { foreignKey: "article_no" });
 
 module.exports = db;

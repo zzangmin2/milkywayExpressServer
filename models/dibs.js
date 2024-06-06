@@ -1,36 +1,36 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
-const User = require("./User");
-const Article = require("./Article");
+const member = require("./member");
+const article = require("./article");
 
-const Dibs = sequelize.define(
-  "Dibs",
+const dibs = sequelize.define(
+  "dibs",
   {
     dibs_no: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    user_no: {
-      type: DataTypes.INTEGER,
+    member_no: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
-        model: User,
-        key: "user_no",
+        model: member,
+        key: "member_no",
       },
     },
     article_no: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       references: {
-        model: Article,
+        model: article,
         key: "article_no",
       },
     },
   },
   {
-    tableName: "Dibs",
+    tableName: "dibs",
   }
 );
 
-module.exports = Dibs;
+module.exports = dibs;
