@@ -4,10 +4,9 @@ const sequelize = require("../config/Database");
 const member = require("./member");
 const article = require("./article");
 const apply = require("./apply");
-const career = require("./career");
+const career = require("./Career");
 const certification = require("./certification");
 const auth = require("./auth");
-const student_info = require("./student_info");
 const studentresume = require("./studentresume");
 const refresh_token = require("./refresh_token");
 const dibs = require("./dibs");
@@ -24,9 +23,9 @@ db.sequelize = sequelize;
  * app.js에서 사용할 때 require로 db를 불러오고 사용할 모델들 객체 할당
  */
 
+db.dibs = dibs;
 db.member = member;
 db.article = article;
-db.student_info = student_info;
 db.certification = certification;
 db.career = career;
 db.auth = auth;
@@ -69,11 +68,18 @@ certification.belongsTo(member, {
 // member.hasOne(student_info, { foreignKey: "member_no" });
 // student_info.belongsTo(member, { foreignKey: "member_no" });
 
-// member.hasOne(studentresume, { foreignKey: "member_no" });
-// studentresume.belongsTo(member, { foreignKey: "member_no" });
-
 // member.hasOne(refresh_token, { foreignKey: "member_no" });
 // refresh_token.belongsTo(member, { foreignKey: "member_no" });
+
+// studentresume.belongsTo(member, { foreignKey: "studentresume_member_no" });
+// member.hasOne(studentresume, { foreignKey: "studentresume_member_no" });
+
+/**
+ * studentresume (학생정보) 와 member테이블 관계 설정
+ */
+
+// member.hasOne(studentresume, { foreignKey: "member_no" });
+// studentresume.belongsTo(member, { foreignKey: "member_no" });
 
 /**
  * 게시물 관련 관계 설정
