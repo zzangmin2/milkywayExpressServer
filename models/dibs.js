@@ -7,7 +7,7 @@ const dibs = sequelize.define(
   "dibs",
   {
     dibs_no: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -29,6 +29,7 @@ const dibs = sequelize.define(
     },
   },
   {
+    timestamps: false,
     tableName: "dibs",
   }
 );

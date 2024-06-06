@@ -20,8 +20,8 @@ router.get("/posts/list", tokenAuthMiddleware, async (req, res) => {
  */
 router.get("/posts/:no", tokenAuthMiddleware, async (req, res) => {
   try {
-    const userId = req.user.id;
-    const userNo = req.user.no;
+    const userId = req.user.memberId;
+    const userNo = req.user.memberNo;
     const requestedarticleNo = req.params.no;
     const findArticle = await article.findOne({
       where: { article_no: requestedarticleNo },
@@ -81,9 +81,9 @@ router.post("/posts/write", tokenAuthMiddleware, async (req, res) => {
       conMethod,
       conInfo,
     } = req.body;
-    console.log(req.user);
-    const userId = req.user.id;
-    const userNo = req.user.no;
+
+    const userId = req.user.memberId;
+    const userNo = req.user.memberNo;
     const newArticle = await article.create({
       member_no: userNo,
       article_memberId: userId,
@@ -116,7 +116,7 @@ router.post("/posts/write", tokenAuthMiddleware, async (req, res) => {
 router.put("/posts/done/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedarticleNo = req.params.no;
-    const userId = req.user.id;
+    const userId = req.user.memberId;
     const findArticle = await article.findOne({
       where: { article_no: requestedarticleNo },
     });
@@ -163,7 +163,7 @@ router.put("/posts/done/:no", tokenAuthMiddleware, async (req, res) => {
 router.delete("/posts/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedarticleNo = req.params.no;
-    const userId = req.user.id;
+    const userId = req.user.memberId;
     const findArticle = await article.findOne({
       where: { article_no: requestedarticleNo },
     });
@@ -198,8 +198,8 @@ router.delete("/posts/:no", tokenAuthMiddleware, async (req, res) => {
 router.post("/posts/apply/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedarticleNo = req.params.no;
-    const userId = req.user.id;
-    const userNo = req.user.no;
+    const userId = req.user.memberId;
+    const userNo = req.user.memberNo;
     const findArticle = await article.findOne({
       where: { article_no: requestedarticleNo },
     });
@@ -271,7 +271,7 @@ router.get("/posts/applylist/:no", tokenAuthMiddleware, async (req, res) => {
 router.post("/posts/likes/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedarticleNo = req.params.no;
-    const userNo = req.user.no;
+    const userNo = req.user.memberNo;
     const findLike = await dibs.findAll({
       where: { member_no: userNo },
     });
@@ -304,7 +304,7 @@ router.post("/posts/likes/:no", tokenAuthMiddleware, async (req, res) => {
 router.delete("/posts/likes/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedarticleNo = req.params.no;
-    const userNo = req.user.no;
+    const userNo = req.user.memberNo;
     const deleteLike = await dibs.destroy({
       where: {
         member_no: userNo,
@@ -327,7 +327,7 @@ router.delete("/posts/likes/:no", tokenAuthMiddleware, async (req, res) => {
 router.get("/apply/basicInfo/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedapplyNo = req.params.no;
-    const userNo = req.user.no;
+    const userNo = req.user.memberNo;
 
     const findApply = await apply.findOne({
       where: {
@@ -369,7 +369,7 @@ router.get(
   async (req, res) => {
     try {
       const requestedapplyNo = req.params.no;
-      const userNo = req.user.no;
+      const userNo = req.user.memberNo;
 
       const findApply = await apply.findOne({
         where: {
@@ -411,7 +411,7 @@ router.put("/update/:no", tokenAuthMiddleware, async (req, res) => {
   try {
     const requestedapplyNo = req.params.no;
     const { applyResult } = req.body;
-    const userNo = req.user.no;
+    const userNo = req.user.memberNo;
     const findApply = await apply.findOne({
       where: {
         apply_no: requestedapplyNo,
