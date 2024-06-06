@@ -3,10 +3,10 @@ const sequelize = require("../config/Database");
 const member = require("./member");
 const article = require("./article");
 
-const apply = sequelize.define(
-  "apply",
+const dibs = sequelize.define(
+  "dibs",
   {
-    apply_no: {
+    dibs_no: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
@@ -27,21 +27,11 @@ const apply = sequelize.define(
         key: "article_no",
       },
     },
-    apply_result: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    apply_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
   },
   {
-    tableName: "apply",
-    timestamps: true,
-    updatedAt: false,
-    createdAt: "apply_date",
+    timestamps: false,
+    tableName: "dibs",
   }
 );
 
-module.exports = apply;
+module.exports = dibs;
