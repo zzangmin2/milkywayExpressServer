@@ -9,7 +9,7 @@ const certification = require("./certification");
 const auth = require("./auth");
 const studentresume = require("./studentresume");
 const refresh_token = require("./refresh_token");
-const dibs = require("./Dibs");
+const dibs = require("./dibs");
 
 /**
  * 객체 초기화
@@ -32,6 +32,7 @@ db.auth = auth;
 db.apply = apply;
 db.refresh_token = refresh_token;
 db.studentresume = studentresume;
+db.dibs = dibs;
 
 /**
  * 자격증, 유저 인증 관련된 관계 설정
@@ -118,7 +119,7 @@ apply.belongsTo(article, {
 });
 
 // /**
-//  * 찜은 1:N ( 아직 찜 테이블 x )
+//  * 찜은 1:N
 //  */
 member.hasMany(dibs, {
   foreignKey: "member_no",
