@@ -23,7 +23,8 @@ const insertDummyData = require("./utils/insertDummyData");
 const initDatabase = async () => {
   try {
     await sequelize.authenticate();
-    await db.sequelize.sync({ force: true });
+    // await db.sequelize.sync({ force: true });
+    await db.sequelize.sync();
 
     insertDummyData();
 
@@ -55,7 +56,7 @@ const PORT = process.env.PORT || 8080;
  * 라우터 설정
  */
 app.use("/", memberRoutes);
-app.use("/posts", postRoutes);
+app.use("/", postRoutes);
 
 app.listen(PORT, () => {
   initDatabase();
