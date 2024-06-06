@@ -8,7 +8,7 @@ const insertDummyData = async () => {
    * faker.js로 더미데이터 삽입하기
    */
   const members = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1; i++) {
     members.push(
       await member.create({
         member_id: `test${i + 1}`,
@@ -21,7 +21,7 @@ const insertDummyData = async () => {
     );
   }
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 1; i++) {
     const member = faker.helpers.arrayElement(members);
     await article.create({
       article_memberId: member.member_id,
