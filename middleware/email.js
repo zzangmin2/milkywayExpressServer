@@ -15,7 +15,7 @@ const smtpTransport = nodemailer.createTransport({
   secure: false,
   requireTLS: true,
   auth: {
-    user: "toui5679@naver.com",
+    user: process.env.EMAIL_HOST,
     pass: process.env.EMAIL_PASSWORD,
   },
   tls: {
