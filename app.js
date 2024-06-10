@@ -26,8 +26,7 @@ const initDatabase = async () => {
   try {
     await sequelize.authenticate();
     // await db.sequelize.sync({ force: true });
-    await db.sequelize.sync();
-
+    // await db.sequelize.sync();
 
     // insertDummyData();
 
@@ -61,7 +60,6 @@ const PORT = process.env.PORT || 8080;
 
 app.use("/", postRoutes);
 app.use("/", memberRoutes, careerRoutes, myInfoRoutes);
-
 
 app.listen(PORT, () => {
   initDatabase();
