@@ -6,6 +6,8 @@ const db = require("./models/index");
 const sequelize = require("./config/Database");
 const memberRoutes = require("./routes/memberRoutes");
 const postRoutes = require("./routes/postRoutes");
+const careerRoutes = require("./routes/myCareerRoutes");
+const myInfoRoutes = require("./routes/myInfoRoutes");
 const insertDummyData = require("./utils/insertDummyData");
 
 /**
@@ -23,9 +25,11 @@ const insertDummyData = require("./utils/insertDummyData");
 const initDatabase = async () => {
   try {
     await sequelize.authenticate();
-    await db.sequelize.sync({ force: true });
+    // await db.sequelize.sync({ force: true });
+    await db.sequelize.sync();
 
-    insertDummyData();
+
+    // insertDummyData();
 
     console.log("서버랑 붙음");
   } catch (error) {
@@ -54,8 +58,10 @@ const PORT = process.env.PORT || 8080;
 /**
  * 라우터 설정
  */
-app.use("/", memberRoutes);
-app.use("/posts", postRoutes);
+
+app.use("/", postRoutes);
+app.use("/", memberRoutes, careerRoutes, myInfoRoutes);
+
 
 app.listen(PORT, () => {
   initDatabase();

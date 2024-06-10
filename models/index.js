@@ -4,12 +4,12 @@ const sequelize = require("../config/Database");
 const member = require("./member");
 const article = require("./article");
 const apply = require("./apply");
-const career = require("./career");
+const career = require("./Career");
 const certification = require("./certification");
 const auth = require("./auth");
-const student_info = require("./student_info");
 const studentresume = require("./studentresume");
 const refresh_token = require("./refresh_token");
+const dibs = require("./dibs");
 
 /**
  * 객체 초기화
@@ -23,15 +23,16 @@ db.sequelize = sequelize;
  * app.js에서 사용할 때 require로 db를 불러오고 사용할 모델들 객체 할당
  */
 
+db.dibs = dibs;
 db.member = member;
 db.article = article;
-db.student_info = student_info;
 db.certification = certification;
 db.career = career;
 db.auth = auth;
 db.apply = apply;
 db.refresh_token = refresh_token;
 db.studentresume = studentresume;
+db.dibs = dibs;
 
 /**
  * 자격증, 유저 인증 관련된 관계 설정
@@ -67,11 +68,18 @@ certification.belongsTo(member, {
 // member.hasOne(student_info, { foreignKey: "member_no" });
 // student_info.belongsTo(member, { foreignKey: "member_no" });
 
-// member.hasOne(studentresume, { foreignKey: "member_no" });
-// studentresume.belongsTo(member, { foreignKey: "member_no" });
-
 // member.hasOne(refresh_token, { foreignKey: "member_no" });
 // refresh_token.belongsTo(member, { foreignKey: "member_no" });
+
+// studentresume.belongsTo(member, { foreignKey: "studentresume_member_no" });
+// member.hasOne(studentresume, { foreignKey: "studentresume_member_no" });
+
+/**
+ * studentresume (학생정보) 와 member테이블 관계 설정
+ */
+
+// member.hasOne(studentresume, { foreignKey: "member_no" });
+// studentresume.belongsTo(member, { foreignKey: "member_no" });
 
 /**
  * 게시물 관련 관계 설정
@@ -111,20 +119,20 @@ apply.belongsTo(article, {
 });
 
 // /**
-//  * 찜은 1:N ( 아직 찜 테이블 x )
+//  * 찜은 1:N
 //  */
-// member.hasMany(Dibs, {
-//   foreignKey: "member_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// Dibs.belongsTo(member, { foreignKey: "member_no" });
+member.hasMany(dibs, {
+  foreignKey: "member_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(member, { foreignKey: "member_no" });
 
-// article.hasMany(Dibs, {
-//   foreignKey: "article_no",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// Dibs.belongsTo(article, { foreignKey: "article_no" });
+article.hasMany(dibs, {
+  foreignKey: "article_no",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+dibs.belongsTo(article, { foreignKey: "article_no" });
 
 module.exports = db;

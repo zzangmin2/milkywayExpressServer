@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 const member = require("./member");
+const { fa } = require("@faker-js/faker");
 
 const certification = sequelize.define(
   "certification",
@@ -22,10 +23,14 @@ const certification = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    cert_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
   {
-    createdAt: "cert_date",
     tableName: "certification",
+    timestamps: false,
   }
 );
 
