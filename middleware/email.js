@@ -54,7 +54,7 @@ const emailAuth = (req, res) => {
     const signupEmail = req.body.signupEmail;
 
     const mailOptions = {
-      from: "toui5679@naver.com", // 발신자 이메일 주소.
+      from: process.env.EMAIL_HOST, // 발신자 이메일 주소.
       to: signupEmail, //사용자가 입력한 이메일 -> 목적지 주소 이메일
       subject: "milkyway인증메일 입니다!",
       html: "<h1>인증번호를 입력해주세요 \n\n\n\n\n\n</h1>" + number,
