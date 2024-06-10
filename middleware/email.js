@@ -47,32 +47,36 @@ const generateRandomNumber = (min, max) => {
  * @returns success: false | true
  */
 const emailAuth = (req, res) => {
-  const number = generateRandomNumber(111111, 999999);
-  storedNumber = number;
+  try {
+    const number = generateRandomNumber(111111, 999999);
+    storedNumber = number;
 
-  const signupEmail = req.body.signupEmail;
+    const signupEmail = req.body.signupEmail;
 
-  const mailOptions = {
-    from: "toui5679@naver.com", // 발신자 이메일 주소.
-    to: signupEmail, //사용자가 입력한 이메일 -> 목적지 주소 이메일
-    subject: "milkyway인증메일 입니다!",
-    html: "<h1>인증번호를 입력해주세요 \n\n\n\n\n\n</h1>" + number,
-  };
-  smtpTransport.sendMail(mailOptions, (err, response) => {
-    console.log("response", response);
-    if (err) {
-      res.status(400).json({ success: false, message: "전송 실패!" });
-      smtpTransport.close();
-      return;
-    } else {
-      res.status(200).json({
-        success: true,
-        message: " 메일 전송에 성공하였습니다. ",
-      });
-      smtpTransport.close();
-      return;
-    }
-  });
+    const mailOptions = {
+      from: "toui5679@naver.com", // 발신자 이메일 주소.
+      to: signupEmail, //사용자가 입력한 이메일 -> 목적지 주소 이메일
+      subject: "milkyway인증메일 입니다!",
+      html: "<h1>인증번호를 입력해주세요 \n\n\n\n\n\n</h1>" + number,
+    };
+    smtpTransport.sendMail(mailOptions, (err, response) => {
+      console.log("response", response);
+      if (err) {
+        res.status(400).json({ success: false, message: "전송 실패!" });
+        smtpTransport.close();
+        return;
+      } else {
+        res.status(200).json({
+          success: true,
+          message: " 메일 전송에 성공하였습니다. ",
+        });
+        smtpTransport.close();
+        return;
+      }
+    });
+  } catch (error) {
+    res.status(500).send("server error");
+  }
 };
 
 /**
@@ -83,13 +87,17 @@ const emailAuth = (req, res) => {
  */
 
 const emailVerify = (req, res) => {
-  const verify = req.body.verifyEmail;
-  console.log(verify);
-  console.log(storedNumber);
-  if (verify == storedNumber) {
-    res.status(200).json({ success: true });
-  } else {
-    res.status(400).json({ error: "인증번호가 일치하지 않습니다!" });
+  try {
+    const verify = req.body.verifyEmail;
+    console.log(verify);
+    console.log(storedNumber);
+    if (verify == storedNumber) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ message: "인증번호가 일치하지 않습니다!" });
+    }
+  } catch (error) {
+    res.status(500).send("server error");
   }
 };
 
