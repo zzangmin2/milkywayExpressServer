@@ -26,7 +26,7 @@ const initDatabase = async () => {
   try {
     await sequelize.authenticate();
     // await db.sequelize.sync({ force: true });
-    // await db.sequelize.sync();
+    await db.sequelize.sync();
 
     // insertDummyData();
 
@@ -40,7 +40,7 @@ const initDatabase = async () => {
  * cors 설정
  */
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"],
