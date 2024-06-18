@@ -29,6 +29,7 @@ const initDatabase = async () => {
     await db.sequelize.sync();
 
     insertDummyData();
+    // insertDummyData();
 
     console.log("서버랑 붙음");
   } catch (error) {
@@ -40,7 +41,7 @@ const initDatabase = async () => {
  * cors 설정
  */
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"],
