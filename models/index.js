@@ -2,11 +2,11 @@ const Sequelize = require("sequelize");
 const sequelize = require("../config/Database");
 
 const member = require("./member");
-const article = require("./article");
-const apply = require("./apply");
+const article = require("./Article");
+const apply = require("./Apply");
 const career = require("./Career");
-const certification = require("./certification");
-const auth = require("./auth");
+const certification = require("./Certification");
+const auth = require("./Auth");
 const studentresume = require("./studentresume");
 const refresh_token = require("./refresh_token");
 const dibs = require("./dibs");
