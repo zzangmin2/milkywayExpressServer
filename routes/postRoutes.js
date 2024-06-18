@@ -12,20 +12,22 @@ const { article, apply, dibs, student_info, certification } = db;
 router.get("/posts/list", tokenAuthMiddleware, async (req, res) => {
   const lists = await article.findAll();
 
-  const parsedData = lists.map((item) => {
-    return {
-      article_no: item.article_no,
-      title: item.article_title,
-      findMentor: item.article_find_mentor,
-      endDay: item.article_end_day,
-      likes: item.article_likes,
-      recruit: item.article_recruit,
-      apply: item.article_apply,
-      applyNow: item.apply_now,
-      articleType: item.article_type,
-      regDate: item.article_regdate,
-    };
-  });
+  const parsedData = {
+    content: lists.map((item) => {
+      return {
+        article_no: item.article_no,
+        title: item.article_title,
+        findMentor: item.article_find_mentor,
+        endDay: item.article_end_day,
+        likes: item.article_likes,
+        recruit: item.article_recruit,
+        apply: item.article_apply,
+        applyNow: item.apply_now,
+        articleType: item.article_type,
+        regDate: item.article_regdate,
+      };
+    }),
+  };
   res.status(200).send(parsedData);
 });
 
