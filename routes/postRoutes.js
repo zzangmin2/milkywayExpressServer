@@ -50,8 +50,30 @@ router.get("/posts/:no", tokenAuthMiddleware, async (req, res) => {
       articleData.isAuthor = isAuthor;
       articleData.isLike = isLike;
 
-      console.log("Article found:", articleData);
-      res.status(200).send(articleData);
+      const parseData = {
+        article_no: articleData.article_no,
+        member: {
+          memberNo: articleData.member_no,
+          memberName: articleData.member_no,
+        },
+        articleType: articleData.article_type,
+        title: articleData.article_title,
+        content: articleData.article_content,
+        likes: articleData.article_likes,
+        apply: articleData.article_apply,
+        applyNow: articleData.apply_now,
+        startDay: articleData.article_start_day,
+        endDay: articleData.article_end_day,
+        recruit: articleData.article_recruit,
+        findMentor: articleData.article_find_mentor,
+        mentorTag: articleData.article_mentor_tag,
+        isAuthor: articleData.isAuthor,
+        isApplier: articleData.isApplyer,
+        isLike: articleData.isLike,
+      };
+
+      console.log("Article found:", parseData);
+      res.status(200).send(parseData);
     } else {
       return res.status(404).send("해당 게시물을 찾을 수 없습니다.");
     }

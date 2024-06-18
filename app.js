@@ -28,6 +28,7 @@ const initDatabase = async () => {
     // await db.sequelize.sync({ force: true });
     await db.sequelize.sync();
 
+    insertDummyData();
     // insertDummyData();
 
     console.log("서버랑 붙음");
